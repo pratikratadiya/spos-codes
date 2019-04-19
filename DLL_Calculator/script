@@ -1,0 +1,57 @@
+#! /usr/bin/ksh
+#  Build shared library
+#
+#set -x
+clear
+ 
+# need to execute the command "chmod 700 filename" for the first time to give permissions
+#
+#  Shared library for dlopen absolute path test
+#
+if [ -f ADD.o ]; then rm ADD.o
+fi
+gcc  -c -fpic ADD.c
+if [ -f ADD.so ]; then rm ADD.so
+fi
+gcc -shared -lc  -o ADD.so  ADD.o 
+ 
+if [ -f SUB.o ]; then rm SUB.o
+fi
+gcc  -c -fpic SUB.c
+if [ -f SUB.so ]; then rm SUB.so
+fi
+gcc -shared -lc  -o SUB.so  SUB.o
+
+if [ -f MUL.o ]; then rm MUL.o
+fi
+gcc  -c -fpic MUL.c
+if [ -f MUL.so ]; then rm MUL.so
+fi
+gcc -shared -lc  -o MUL.so  MUL.o
+
+if [ -f DIV.o ]; then rm DIV.o
+fi
+gcc  -c -fpic DIV.c
+if [ -f DIV.so ]; then rm DIV.so
+fi
+gcc -shared -lc  -o DIV.so  DIV.o
+
+#
+#  Shared library for dlopen relative path test
+#
+export LD_LIBRARY_PATH=`pwd`
+# if [ -f lowercase.o ]; then rm lowercase.o
+# fi
+# gcc  -c -fpic lowercase.c
+# if [ -f lowercase.so ]; then rm lowercase.so
+# fi
+# gcc -shared -lc  -o lowercase.so  lowercase.o
+ 
+#
+#  Rebuild test program
+#
+if [ -f run ]; then rm run
+fi
+gcc -o run run.c -ldl
+echo Current LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+./run	
